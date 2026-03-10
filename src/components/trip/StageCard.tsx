@@ -60,8 +60,8 @@ export function StageCard({ stage }: Props) {
     <div
       className={`rounded-lg border p-3 transition-all cursor-pointer ${
         isSelected
-          ? 'border-blue-400 bg-blue-50 shadow-sm'
-          : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm'
+          ? 'border-blue-400 dark:border-blue-500 bg-blue-50 dark:bg-blue-900/30 shadow-sm'
+          : 'border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-gray-300 dark:hover:border-slate-600 hover:shadow-sm'
       }`}
       onClick={() => !isEditing && selectStage(isSelected ? null : stage.id)}
     >
@@ -70,18 +70,18 @@ export function StageCard({ stage }: Props) {
         <div className="flex items-start gap-2 min-w-0">
           <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-500" />
           <div className="min-w-0">
-            <p className="font-semibold text-sm text-gray-800 leading-tight truncate">
+            <p className="font-semibold text-sm text-gray-800 dark:text-slate-100 leading-tight truncate">
               {stage.name}
             </p>
             {!isEditing && (
               <>
-                <div className="mt-0.5 flex items-center gap-1 text-xs text-gray-500">
+                <div className="mt-0.5 flex items-center gap-1 text-xs text-gray-500 dark:text-slate-400">
                   <Calendar className="h-3 w-3 flex-shrink-0" />
                   <span>
                     {formatDisplayDate(stage.arrivalDate)} – {formatDisplayDate(stage.departureDate)}
                   </span>
                 </div>
-                <div className="flex items-center gap-1 text-xs text-gray-400">
+                <div className="flex items-center gap-1 text-xs text-gray-400 dark:text-slate-500">
                   <Clock className="h-3 w-3" />
                   <span>{dayCount} {dayCount === 1 ? 'Tag' : 'Tage'}</span>
                 </div>
@@ -96,14 +96,14 @@ export function StageCard({ stage }: Props) {
             <>
               <button
                 onClick={handleEditSave}
-                className="rounded p-1 text-green-500 hover:bg-green-50 hover:text-green-600"
+                className="rounded p-1 text-green-500 hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-600"
                 title="Speichern"
               >
                 <Check className="h-3.5 w-3.5" />
               </button>
               <button
                 onClick={handleEditCancel}
-                className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+                className="rounded p-1 text-gray-400 dark:text-slate-500 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-gray-600 dark:hover:text-slate-300"
                 title="Abbrechen"
               >
                 <X className="h-3.5 w-3.5" />
@@ -113,7 +113,7 @@ export function StageCard({ stage }: Props) {
             <>
               <button
                 onClick={handleEditOpen}
-                className="rounded p-1 text-gray-300 hover:bg-blue-50 hover:text-blue-400"
+                className="rounded p-1 text-gray-300 dark:text-slate-600 hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-400"
                 title="Datum bearbeiten"
               >
                 <Pencil className="h-3.5 w-3.5" />
@@ -123,7 +123,7 @@ export function StageCard({ stage }: Props) {
                   e.stopPropagation();
                   removeStage(stage.id);
                 }}
-                className="rounded p-1 text-gray-300 hover:bg-red-50 hover:text-red-400"
+                className="rounded p-1 text-gray-300 dark:text-slate-600 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-400"
                 title="Etappe löschen"
               >
                 <Trash2 className="h-3.5 w-3.5" />
@@ -163,7 +163,7 @@ export function StageCard({ stage }: Props) {
               <span className="text-xs text-gray-400">Wetter wird geladen…</span>
             </div>
           ) : isError ? (
-            <p className="text-xs text-red-400">Wetterdaten konnten nicht geladen werden.</p>
+            <p className="text-xs text-red-400 dark:text-red-400">Wetterdaten konnten nicht geladen werden.</p>
           ) : forecasts && forecasts.length > 0 ? (
             <>
               {source === 'historical_avg' && (

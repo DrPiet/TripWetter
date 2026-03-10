@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
 
+/* Dark Mode via .dark Klasse auf <html> */
+@variant dark (&:where(.dark, .dark *));
+
 /* Leaflet Z-Index Fix für Next.js */
 .leaflet-pane,
 .leaflet-control,

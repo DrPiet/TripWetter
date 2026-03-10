@@ -70,14 +70,14 @@ export function TripActions() {
         onClick={handleExport}
         disabled={stages.length === 0}
         title="Reiseplan exportieren"
-        className="rounded p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-700 disabled:cursor-not-allowed disabled:opacity-40"
+        className="rounded p-1.5 text-gray-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-gray-700 dark:hover:text-slate-200 disabled:cursor-not-allowed disabled:opacity-40"
       >
         <Download className="h-4 w-4" />
       </button>
       <button
         onClick={handleImport}
         title="Reiseplan importieren"
-        className="rounded p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+        className="rounded p-1.5 text-gray-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-gray-700 dark:hover:text-slate-200"
       >
         <Upload className="h-4 w-4" />
       </button>
@@ -85,7 +85,7 @@ export function TripActions() {
         onClick={handleClear}
         disabled={stages.length === 0}
         title="Alle Etappen löschen"
-        className="rounded p-1.5 text-gray-500 hover:bg-red-50 hover:text-red-500 disabled:cursor-not-allowed disabled:opacity-40"
+        className="rounded p-1.5 text-gray-500 dark:text-slate-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-500 disabled:cursor-not-allowed disabled:opacity-40"
       >
         <Trash2 className="h-4 w-4" />
       </button>

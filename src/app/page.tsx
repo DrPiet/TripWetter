@@ -3,9 +3,9 @@ import { TripMap } from '@/components/map/TripMap';
 
 export default function Home() {
   return (
-    <main className="flex h-screen overflow-hidden bg-gray-100">
+    <main className="flex h-screen overflow-hidden bg-gray-100 dark:bg-slate-900">
       {/* Sidebar */}
-      <aside className="w-96 flex-shrink-0 overflow-hidden border-r border-gray-200 bg-white shadow-sm">
+      <aside className="w-96 flex-shrink-0 overflow-hidden border-r border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm">
         <TripSidebar />
       </aside>
 

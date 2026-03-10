@@ -32,7 +32,7 @@ export function WeatherSummary({ forecasts, dayCount }: Props) {
     <div className="flex items-center gap-3">
       <WeatherIcon code={dominantCode} size={28} className="text-amber-500 flex-shrink-0" />
       <div className="min-w-0">
-        <p className="text-xs text-gray-500 truncate">{info.label}</p>
+        <p className="text-xs text-gray-500 dark:text-slate-400 truncate">{info.label}</p>
         <WeatherBadge
           tempMax={avgMax}
           tempMin={avgMin}
@@ -40,7 +40,7 @@ export function WeatherSummary({ forecasts, dayCount }: Props) {
           compact
         />
         {coveredDays < dayCount && (
-          <p className="text-xs text-gray-400 mt-0.5">
+          <p className="text-xs text-gray-400 dark:text-slate-500 mt-0.5">
             ({coveredDays} von {dayCount} Tagen)
           </p>
         )}

@@ -109,15 +109,15 @@ export function StageForm() {
   }
 
   return (
-    <div className="border-b border-gray-200 bg-blue-50 p-4">
+    <div className="border-b border-gray-200 dark:border-slate-700 bg-blue-50 dark:bg-slate-800 p-4">
       <div className="mb-3 flex items-center justify-between">
-        <h3 className="flex items-center gap-1.5 font-semibold text-blue-800 text-sm">
+        <h3 className="flex items-center gap-1.5 font-semibold text-blue-800 dark:text-blue-300 text-sm">
           <MapPin className="h-4 w-4" />
           Neue Etappe hinzufügen
         </h3>
         <button
           onClick={handleClose}
-          className="rounded p-0.5 text-gray-400 hover:bg-gray-200 hover:text-gray-600"
+          className="rounded p-0.5 text-gray-400 dark:text-slate-500 hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-gray-600 dark:hover:text-slate-300"
         >
           <X className="h-4 w-4" />
         </button>
@@ -134,7 +134,7 @@ export function StageForm() {
             />
             {/* Lade-Overlay während Reverse Geocoding */}
             {isReversing && (
-              <div className="absolute inset-0 flex items-center gap-2 rounded-md bg-white/80 pl-3 text-xs text-gray-500">
+              <div className="absolute inset-0 flex items-center gap-2 rounded-md bg-white/80 dark:bg-slate-800/80 pl-3 text-xs text-gray-500 dark:text-slate-400">
                 <Loader2 className="h-3.5 w-3.5 animate-spin text-blue-400" />
                 Ort wird ermittelt…
               </div>
@@ -142,13 +142,13 @@ export function StageForm() {
           </div>
           {reverseGeocodeFailed && (
             <div className="mt-1 flex items-center justify-between">
-              <p className="text-xs text-amber-600">
+              <p className="text-xs text-amber-600 dark:text-amber-400">
                 Ort nicht erkannt – Name anpassen oder Suche nutzen.
               </p>
               <button
                 type="button"
                 onClick={handleRetryReverseGeocode}
-                className="flex items-center gap-1 text-xs text-blue-500 hover:text-blue-700"
+                className="flex items-center gap-1 text-xs text-blue-500 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
                 title="Nochmals versuchen"
               >
                 <RefreshCw className="h-3 w-3" />
@@ -182,7 +182,7 @@ export function StageForm() {
           <button
             type="button"
             onClick={handleClose}
-            className="rounded-md border border-gray-300 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-50"
+            className="rounded-md border border-gray-300 dark:border-slate-600 px-3 py-1.5 text-sm text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700"
           >
             Abbrechen
           </button>

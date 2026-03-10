@@ -62,7 +62,7 @@ export function LocationSearch({ onSelect, placeholder = 'Ort suchen…', initia
   return (
     <div ref={containerRef} className="relative">
       <div className="relative">
-        <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400" />
+        <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400 dark:text-slate-500" />
         <input
           type="text"
           value={inputValue}
@@ -73,7 +73,7 @@ export function LocationSearch({ onSelect, placeholder = 'Ort suchen…', initia
             }
           }}
           placeholder={placeholder}
-          className="w-full rounded-md border border-gray-300 py-1.5 pl-8 pr-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="w-full rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 py-1.5 pl-8 pr-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
         />
         {isLoading && (
           <Loader2 className="absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 animate-spin text-gray-400" />
@@ -81,21 +81,21 @@ export function LocationSearch({ onSelect, placeholder = 'Ort suchen…', initia
       </div>
 
       {isOpen && results && results.length > 0 && (
-        <ul className="absolute left-0 right-0 top-full z-50 mt-1 max-h-52 overflow-y-auto rounded-md border border-gray-200 bg-white shadow-lg">
+        <ul className="absolute left-0 right-0 top-full z-50 mt-1 max-h-52 overflow-y-auto rounded-md border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-lg">
           {results.map((result) => (
             <li key={result.id}>
               <button
                 type="button"
                 onClick={() => handleSelect(result)}
-                className="flex w-full items-start gap-2 px-3 py-2 text-left text-sm hover:bg-blue-50"
+                className="flex w-full items-start gap-2 px-3 py-2 text-left text-sm hover:bg-blue-50 dark:hover:bg-slate-700"
               >
                 <MapPin className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-blue-400" />
                 <span>
-                  <span className="font-medium text-gray-800">{result.name}</span>
+                  <span className="font-medium text-gray-800 dark:text-slate-100">{result.name}</span>
                   {result.admin1 && (
-                    <span className="text-gray-500">, {result.admin1}</span>
+                    <span className="text-gray-500 dark:text-slate-400">, {result.admin1}</span>
                   )}
-                  <span className="text-gray-400">, {result.country}</span>
+                  <span className="text-gray-400 dark:text-slate-500">, {result.country}</span>
                 </span>
               </button>
             </li>
@@ -104,7 +104,7 @@ export function LocationSearch({ onSelect, placeholder = 'Ort suchen…', initia
       )}
 
       {isOpen && !isLoading && results && results.length === 0 && debouncedQuery.length >= 2 && (
-        <div className="absolute left-0 right-0 top-full z-50 mt-1 rounded-md border border-gray-200 bg-white px-3 py-2 text-sm text-gray-500 shadow-md">
+        <div className="absolute left-0 right-0 top-full z-50 mt-1 rounded-md border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-500 dark:text-slate-400 shadow-md">
           Kein Ort gefunden
         </div>
       )}

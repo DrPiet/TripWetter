@@ -12,8 +12,8 @@ export function StageList() {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center px-4">
         <div className="mb-3 text-4xl">🗺️</div>
-        <p className="font-medium text-gray-600 text-sm">Noch keine Etappen</p>
-        <p className="mt-1 text-xs text-gray-400">
+        <p className="font-medium text-gray-600 dark:text-slate-300 text-sm">Noch keine Etappen</p>
+        <p className="mt-1 text-xs text-gray-400 dark:text-slate-500">
           Klicke auf die Karte oder nutze die Suche, um eine Etappe hinzuzufügen.
         </p>
       </div>
