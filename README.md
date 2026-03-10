@@ -21,10 +21,21 @@ Die App läuft vollständig im Browser, braucht kein Backend und keinen API-Key.
 - **Automatische Wetterdaten** je nach Zeitraum:
   - 🔮 **Forecast** – bis 16 Tage in die Zukunft
   - 🗃️ **Archiv** – historische Wetterdaten für vergangene Etappen
-  - 📊 **Klimadurchschnitte** – für Etappen weit in der Zukunft (> 16 Tage): Durchschnitt der letzten 5 Jahre
+  - 📊 **Klimadurchschnitte** – für Etappen weit in der Zukunft (> 16 Tage): Ø der letzten 5 Jahre mit Hinweis-Banner
+- **Datum bearbeiten** – Ankunfts- und Abreisedatum bestehender Etappen inline ändern (Bleistift-Icon)
 - **Tagesweise Detailansicht** – Temperatur, Niederschlag, Windgeschwindigkeit, Wettericon
+- **🌙 Dark Mode** – Schalter in der Sidebar, Präferenz wird gespeichert (System-Einstellung als Fallback)
 - **Lokale Persistenz** – Etappen bleiben nach dem Neuladen erhalten (localStorage)
+- **Export / Import** – Reiseplan als JSON sichern und wiederherstellen
 - **Kein Account nötig** – alles läuft im Browser
+
+---
+
+## Screenshots
+
+| Hell-Modus | Dunkel-Modus |
+|---|---|
+| Sidebar mit Etappen, Wetterdaten und Karte | Identische Ansicht im Dark Mode |
 
 ---
 
@@ -33,7 +44,7 @@ Die App läuft vollständig im Browser, braucht kein Backend und keinen API-Key.
 | Technologie | Zweck |
 |---|---|
 | [Next.js 15](https://nextjs.org/) | Framework (App Router, TypeScript) |
-| [Tailwind CSS v4](https://tailwindcss.com/) | Styling |
+| [Tailwind CSS v4](https://tailwindcss.com/) | Styling inkl. Dark Mode |
 | [react-leaflet](https://react-leaflet.js.org/) | Interaktive Karte |
 | [Open-Meteo API](https://open-meteo.com/) | Wetterdaten (kostenlos, kein API-Key) |
 | [Zustand](https://zustand-demo.pmnd.rs/) | State Management + localStorage |
@@ -65,14 +76,14 @@ npm run dev
 TripWetter wählt automatisch den optimalen Datenpfad je nach Etappenzeitraum:
 
 ```
-Etappe > 16 Tage in Zukunft  →  📊 Klimadurchschnitte (5 Jahre)
-Etappe innerhalb 16 Tage     →  🔮 Open-Meteo Forecast-API
-Etappe in letzten 6 Tagen    →  🔮 Forecast-API (Archiv hat ~5 Tage Delay)
-Etappe weiter in Vergangenheit → 🗃️ Open-Meteo Archive-API
-Gemischt (Übergang)          →  🔀 Beide APIs kombiniert
+Etappe > 16 Tage in Zukunft   →  📊 Klimadurchschnitte (Ø 5 Jahre, 7 Tage gecacht)
+Etappe innerhalb 16 Tage      →  🔮 Open-Meteo Forecast-API
+Etappe in letzten 6 Tagen     →  🔮 Forecast-API (Archiv hat ~5 Tage Verzögerung)
+Etappe weiter in Vergangenheit →  🗃️ Open-Meteo Archive-API
+Gemischt (Übergang)           →  🔀 Beide APIs kombiniert & dedupliziert
 ```
 
-Alle Anfragen werden 1 Stunde gecacht (Klimadaten 7 Tage).
+Forecast- und Archivdaten werden **1 Stunde** gecacht, Klimadurchschnitte **7 Tage**.
 
 ---
 
@@ -83,26 +94,27 @@ src/
 ├── app/                    # Next.js App Router
 │   ├── layout.tsx
 │   ├── page.tsx
-│   └── globals.css
+│   └── globals.css         # Tailwind + Leaflet CSS + Dark Mode Variant
 ├── components/
-│   ├── map/                # Leaflet-Karte (SSR-sicher)
-│   ├── trip/               # Sidebar, StageCard, StageForm
-│   ├── weather/            # WeatherSummary, WeatherDetail, Icons
-│   └── ui/                 # DateRangePicker, LocationSearch, etc.
+│   ├── map/                # Leaflet-Karte (SSR-sicher via dynamic import)
+│   ├── trip/               # Sidebar, StageCard (mit Inline-Edit), StageForm
+│   ├── weather/            # WeatherSummary, WeatherDetail, Icons, Badge
+│   └── ui/                 # DateRangePicker, LocationSearch, LoadingSpinner
 ├── hooks/
-│   ├── useTrip.ts          # Zustand Store
-│   ├── useWeather.ts       # React Query + Datenquellen-Auswahl
+│   ├── useTrip.ts          # Zustand Store (stages, pendingCoords, selectedId)
+│   ├── useWeather.ts       # React Query + automatische Datenquellen-Auswahl
+│   ├── useTheme.ts         # Dark/Light Mode mit localStorage-Persistenz
 │   └── useGeocoding.ts     # Ortssuche mit Debounce
 ├── lib/
 │   ├── api/
-│   │   ├── openmeteo.ts    # Forecast, Archive, Klimadurchschnitte
-│   │   ├── geocoding.ts    # Ortssuche
-│   │   └── weatherCodes.ts # WMO-Code → Label/Icon
+│   │   ├── openmeteo.ts    # Forecast, Archive & fetchHistoricalAverageForStage()
+│   │   ├── geocoding.ts    # Ortssuche + Reverse Geocoding
+│   │   └── weatherCodes.ts # WMO-Code → Label/Icon Mapping
 │   └── utils/
-│       ├── dateUtils.ts    # Datumshilfen, determineWeatherSource()
-│       └── weatherUtils.ts # Aggregation
+│       ├── dateUtils.ts    # determineWeatherSource(), formatDate, etc.
+│       └── weatherUtils.ts # Aggregation (dominantCode, Mittelwerte)
 └── types/
-    ├── trip.ts             # TripStage, DailyWeather, etc.
+    ├── trip.ts             # TripStage, DailyWeather, StageWeather
     └── weather.ts          # Open-Meteo API Response Typen
 ```
 
