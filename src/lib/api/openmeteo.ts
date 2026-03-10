@@ -48,6 +48,13 @@ function parseDailyWeather(data: OpenMeteoForecastResponse): DailyWeather[] {
   }));
 }
 
+/** Häufigsten WMO-Wettercode über mehrere Tage ermitteln */
+function mostCommonCode(codes: number[]): number {
+  const freq = new Map<number, number>();
+  for (const c of codes) freq.set(c, (freq.get(c) ?? 0) + 1);
+  return [...freq.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? 0;
+}
+
 function deduplicateByDate(forecasts: DailyWeather[]): DailyWeather[] {
   const seen = new Map<string, DailyWeather>();
   for (const f of forecasts) {
@@ -111,4 +118,56 @@ export async function fetchWeatherForStage(
   }
 
   return deduplicateByDate(results).sort((a, b) => a.date.localeCompare(b.date));
+}
+
+/**
+ * Historische Klimadurchschnitte: gleicher Zeitraum der letzten 5 Jahre abrufen
+ * und tagweise mitteln – als Fallback wenn Forecast > 16 Tage in der Zukunft liegt.
+ */
+export async function fetchHistoricalAverageForStage(
+  lat: number,
+  lng: number,
+  arrivalDate: string,
+  departureDate: string,
+  yearsBack = 5,
+): Promise<DailyWeather[]> {
+  const arrival   = new Date(arrivalDate   + 'T00:00:00');
+  const departure = new Date(departureDate + 'T00:00:00');
+  const dayCount  = Math.round((departure.getTime() - arrival.getTime()) / 86400000) + 1;
+
+  // Alle Jahre parallel abrufen
+  const fetches = Array.from({ length: yearsBack }, (_, i) => {
+    const y = i + 1;
+    const start = new Date(arrival);
+    start.setFullYear(start.getFullYear() - y);
+    const end = new Date(departure);
+    end.setFullYear(end.getFullYear() - y);
+    return fetchFromEndpoint(ARCHIVE_URL, lat, lng, formatDate(start), formatDate(end))
+      .then(parseDailyWeather)
+      .catch(() => null); // Jahr ohne Daten überspringen
+  });
+
+  const allYears = (await Promise.all(fetches)).filter(Boolean) as DailyWeather[][];
+  if (allYears.length === 0) return [];
+
+  // Tagweise über alle verfügbaren Jahre mitteln
+  return Array.from({ length: dayCount }, (_, i) => {
+    const targetDate = new Date(arrival);
+    targetDate.setDate(arrival.getDate() + i);
+
+    const daySlices = allYears.map(year => year[i]).filter(Boolean) as DailyWeather[];
+    if (daySlices.length === 0) return null;
+
+    const avg = (fn: (d: DailyWeather) => number) =>
+      Math.round(daySlices.reduce((s, d) => s + fn(d), 0) / daySlices.length * 10) / 10;
+
+    return {
+      date:             formatDate(targetDate),
+      temperatureMax:   avg(d => d.temperatureMax),
+      temperatureMin:   avg(d => d.temperatureMin),
+      precipitationSum: avg(d => d.precipitationSum),
+      weatherCode:      mostCommonCode(daySlices.map(d => d.weatherCode)),
+      windspeedMax:     avg(d => d.windspeedMax),
+    } satisfies DailyWeather;
+  }).filter(Boolean) as DailyWeather[];
 }

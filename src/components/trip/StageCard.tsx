@@ -66,11 +66,7 @@ export function StageCard({ stage }: Props) {
 
       {/* Wetter */}
       <div className="mt-2.5 pl-6">
-        {source === 'out_of_range' ? (
-          <p className="text-xs text-amber-600 italic">
-            Wetterdaten nur bis 16 Tage im Voraus verfügbar.
-          </p>
-        ) : isLoading ? (
+        {isLoading ? (
           <div className="flex items-center gap-2">
             <LoadingSpinner size="sm" />
             <span className="text-xs text-gray-400">Wetter wird geladen…</span>
@@ -79,6 +75,14 @@ export function StageCard({ stage }: Props) {
           <p className="text-xs text-red-400">Wetterdaten konnten nicht geladen werden.</p>
         ) : forecasts && forecasts.length > 0 ? (
           <>
+            {source === 'historical_avg' && (
+              <div className="mb-2 flex items-center gap-1.5 rounded-md bg-amber-50 border border-amber-200 px-2 py-1">
+                <span className="text-amber-500 text-sm">📊</span>
+                <p className="text-xs text-amber-700">
+                  Ø Klimadaten (letzte 5 Jahre) – kein Forecast für diesen Zeitraum verfügbar.
+                </p>
+              </div>
+            )}
             <WeatherSummary forecasts={forecasts} dayCount={dayCount} />
             <WeatherDetail forecasts={forecasts} />
           </>

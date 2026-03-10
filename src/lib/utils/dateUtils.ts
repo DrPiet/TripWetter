@@ -23,7 +23,7 @@ export function isWithinForecastRange(dateStr: string): boolean {
 export function determineWeatherSource(
   arrivalDate: string,
   departureDate: string,
-): 'forecast' | 'archive' | 'mixed' | 'out_of_range' {
+): 'forecast' | 'archive' | 'mixed' | 'historical_avg' {
   const today = todayDate();
   const arrival = new Date(arrivalDate);
   const departure = new Date(departureDate);
@@ -33,8 +33,9 @@ export function determineWeatherSource(
   const archiveCutoff = new Date(today);
   archiveCutoff.setDate(today.getDate() - 6);
 
+  // Mehr als 16 Tage in der Zukunft → historische Klimadurchschnitte verwenden
   const beyondForecast = arrival > maxForecast;
-  if (beyondForecast) return 'out_of_range';
+  if (beyondForecast) return 'historical_avg';
 
   const fullyInDistantPast = departure < archiveCutoff;
   if (fullyInDistantPast) return 'archive';

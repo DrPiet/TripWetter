@@ -15,7 +15,7 @@ export interface DailyWeather {
 export interface StageWeather {
   dailyForecasts: DailyWeather[];
   fetchedAt: number;
-  source: 'forecast' | 'archive' | 'mixed' | 'out_of_range';
+  source: 'forecast' | 'archive' | 'mixed' | 'historical_avg';
 }
 
 export interface TripStage {
