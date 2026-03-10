@@ -1,0 +1,27 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+/* Leaflet Z-Index Fix für Next.js */
+.leaflet-pane,
+.leaflet-control,
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 400;
+}
+
+/* Leaflet Popup-Stil-Reset */
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.leaflet-popup-content {
+  margin: 10px 14px;
+}
+
+/* Verhindert Layout-Shift beim Laden */
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
