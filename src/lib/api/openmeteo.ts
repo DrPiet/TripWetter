@@ -63,19 +63,21 @@ export async function fetchWeatherForStage(
   departureDate: string,
 ): Promise<DailyWeather[]> {
   const today = todayDate();
-  const yesterday = new Date(today);
-  yesterday.setDate(today.getDate() - 1);
   const maxForecast = new Date(today);
   maxForecast.setDate(today.getDate() + 15); // 16 Tage inkl. heute
+
+  // Archive-API hat ~5 Tage Verzögerung → alles jünger als 6 Tage über Forecast lösen
+  const archiveCutoff = new Date(today);
+  archiveCutoff.setDate(today.getDate() - 6);
 
   const start = new Date(arrivalDate);
   const end = new Date(departureDate);
 
   const results: DailyWeather[] = [];
 
-  // Archive: Vergangenheit
-  if (start < today) {
-    const archiveEnd = end < yesterday ? end : yesterday;
+  // Archive: nur Daten älter als 6 Tage (sicher verfügbar)
+  if (start < archiveCutoff) {
+    const archiveEnd = end < archiveCutoff ? end : new Date(archiveCutoff.getTime() - 86400000);
     if (archiveEnd >= start) {
       try {
         const data = await fetchFromEndpoint(
@@ -89,9 +91,11 @@ export async function fetchWeatherForStage(
     }
   }
 
-  // Forecast: Gegenwart/Zukunft (bis 16 Tage)
-  if (end >= today) {
-    const forecastStart = start >= today ? start : today;
+  // Forecast: letzte 6 Tage + heute + bis 16 Tage voraus
+  // Die Forecast-API liefert auch vergangene Tage zuverlässig
+  const forecastWindowStart = archiveCutoff;
+  if (end >= forecastWindowStart) {
+    const forecastStart = start >= forecastWindowStart ? start : forecastWindowStart;
     const forecastEnd = end <= maxForecast ? end : maxForecast;
     if (forecastStart <= forecastEnd) {
       try {

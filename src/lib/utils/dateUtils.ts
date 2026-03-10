@@ -29,14 +29,19 @@ export function determineWeatherSource(
   const departure = new Date(departureDate);
   const maxForecast = new Date(today);
   maxForecast.setDate(today.getDate() + 16);
+  // Archive hat ~5 Tage Verzögerung – Daten innerhalb der letzten 6 Tage kommen vom Forecast
+  const archiveCutoff = new Date(today);
+  archiveCutoff.setDate(today.getDate() - 6);
 
-  const allPast = departure < today;
-  const allFuture = arrival >= today;
   const beyondForecast = arrival > maxForecast;
+  if (beyondForecast) return 'out_of_range';
 
-  if (allPast) return 'archive';
-  if (allFuture && !beyondForecast) return 'forecast';
-  if (allFuture && beyondForecast) return 'out_of_range';
+  const fullyInDistantPast = departure < archiveCutoff;
+  if (fullyInDistantPast) return 'archive';
+
+  const fullyInFuture = arrival >= today;
+  if (fullyInFuture) return 'forecast';
+
   return 'mixed';
 }
 
